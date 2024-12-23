@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { useTheme } from "next-themes";
+import { useToken } from "@/app/hooks/useToken";
+import { auth } from "@/firebase/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,15 +16,29 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HomeIcon } from "lucide-react";
 import { MoonIcon, SunIcon } from "lucide-react";
+import { removeToken } from "@/app/actions/actions";
+import { signOut } from "firebase/auth";
+import { checkAdminStatus } from "@/app/actions/actions";
 
 export function Header() {
+  const [admin, setAdmin] = useState(false);
   const { user, setUser } = useAppStore();
-  console.log("User photoURL:", user?.photoURL);
   const { theme, setTheme } = useTheme();
+  const { customClaims } = useToken();
+
+  console.log(customClaims);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  useEffect(() => {
+    if (customClaims) {
+      setAdmin(!!customClaims.admin);
+    }
+  }, [customClaims]);
+
+  console.log(admin);
 
   return (
     <nav className="p-4 border-b flex items-center justify-between">
@@ -86,26 +103,29 @@ export function Header() {
                   My Account
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="p-0">
-                <Link
-                  href="/admin-dahsboard"
-                  className="
-        block
-        w-full
-        p-2
-        text-left
-        hover:bg-primary
-        hover:text-white
-      "
-                >
-                  Admin Dashboard
-                </Link>
-              </DropdownMenuItem>
+              {admin && (
+                <DropdownMenuItem className="p-0">
+                  <Link
+                    href="/admin-dashboard"
+                    className="block w-full text-left hover:bg-primaryhover:text-white"
+                  >
+                    Admin Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
+
               <DropdownMenuItem className="p-0">
                 <Button
                   variant="ghost"
-                  onClick={() => {
-                    setUser(null);
+                  onClick={async () => {
+                    try {
+                      await signOut(auth);
+                      await removeToken();
+                      setUser(null);
+                    } catch (error) {
+                      console.error("Logout error:", error);
+                      setUser(null);
+                    }
                   }}
                   className="w-full hover:bg-primary hover:text-white rounded-none justify-start"
                 >
