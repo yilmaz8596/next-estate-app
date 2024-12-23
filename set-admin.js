@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./fire-homes-5e1aa-firebase-adminsdk-9l10g-942f4387ae.json"); // Use your downloaded JSON file name
+const serviceAccount = require("./config/fire-homes-5e1aa-firebase-adminsdk-9l10g-942f4387ae.json"); // Use your downloaded JSON file name
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
