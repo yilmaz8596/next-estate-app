@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppStore } from "@/store/useAppStore";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,17 +11,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { HomeIcon } from "lucide-react";
+import { MoonIcon, SunIcon } from "lucide-react";
 
 export function Header() {
   const { user, setUser } = useAppStore();
-  console.log("User photoURL:", user?.photoURL); // Specifically log the photoURL
+  console.log("User photoURL:", user?.photoURL);
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
-    <nav className="p-4 border-b bg-slate-100 flex items-center justify-between">
+    <nav className="p-4 border-b flex items-center justify-between">
       <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="text-primary text-lg font-semibold">
-          Fire Homes
-        </Link>
+        <div className="flex items-center gap-4">
+          <HomeIcon className="h-8 w-8 text-primary" />
+          <Link
+            href="/"
+            className="text-primary text-2xl tracking-wider font-semibold"
+          >
+            Fire Homes
+          </Link>
+        </div>
       </div>
       {user ? (
         <div className="flex items-center gap-4">
@@ -103,18 +117,28 @@ export function Header() {
         </div>
       ) : (
         <div className="flex items-center justify-center">
-          <Button variant="link">
-            <Link href="/login" className="text-slate-600">
-              Login
-            </Link>
+          <Button
+            variant="ghost"
+            className="
+          hover:bg-primary hover:text-white
+          "
+          >
+            <Link href="/login">Login</Link>
           </Button>
-          <Button variant="link">
-            <Link href="/signup" className="text-slate-600">
-              Signup
-            </Link>
+          <Button variant="ghost" className="hover:bg-primary hover:text-white">
+            <Link href="/signup">Signup</Link>
           </Button>
         </div>
       )}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleTheme}
+        className="ml-2"
+      >
+        {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+        <span className="sr-only">Toggle theme</span>
+      </Button>
     </nav>
   );
 }

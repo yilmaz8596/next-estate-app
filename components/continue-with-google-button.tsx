@@ -24,6 +24,7 @@ export default function ContinueWithGoogleButton() {
             router.push("/");
           });
       }}
+      className="w-full"
     >
       Continue with Google
     </Button>

@@ -1,10 +1,14 @@
 import ContinueWithGoogleButton from "@/components/continue-with-google-button";
-
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function LoginPage() {
   return (
-    <div>
-      <h1>Login</h1>
-      <ContinueWithGoogleButton />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-3xl font-bold">Login</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ContinueWithGoogleButton />
+      </CardContent>
+    </Card>
   );
 }

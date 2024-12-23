@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from "next/link";
-import { Header } from "@/components/ui/shared/Header";
+import { Poppins } from "next/font/google";
+import { Header } from "@/components/shared/Header";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Fire Homes",
@@ -14,10 +20,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <Header />
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`
+        ${poppins.className} antialiased
+        `}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
